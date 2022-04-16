@@ -6,21 +6,31 @@ namespace Match3
 {
     public class Board : MonoBehaviour
     {
+        private Camera mainCamera;
         public int boardWidth;
         public int boardHeight;
-        public Camera mainCamera;
         public GameObject backgroundTilePrefab;
+        public Gem[] gems;
+        public Gem[,] allGems;
+
+        private void Awake()
+        {
+            mainCamera = Camera.main;
+        }
 
         private void Start()
         {
+            allGems = new Gem[boardWidth, boardHeight];
             CameraSetup();
             BoardSetup();
         }
 
         private void CameraSetup()
         {
-            var cameraOffset = -10;
-            mainCamera.transform.position = new Vector3((boardWidth / 2), (boardHeight / 2), cameraOffset);
+            var xValue = (boardWidth / 2);
+            var yValue = (boardHeight / 2);
+            var zValue = -10;
+            mainCamera.transform.position = new Vector3(xValue, yValue, zValue);
         }
 
         private void BoardSetup()
@@ -33,8 +43,21 @@ namespace Match3
                     GameObject backgroundTile = Instantiate(backgroundTilePrefab, position, Quaternion.identity);
                     backgroundTile.transform.parent = this.transform;
                     backgroundTile.name = $"BackgroundTile - {x}, {y}";
+
+                    var gemToUse = Random.Range(0, gems.Length);
+                    SpawnGem(new Vector2Int(x, y), gems[gemToUse]);
                 }
             }
+        }
+
+        private void SpawnGem(Vector2Int position, Gem gemToSpawn)
+        {
+            Gem gem = Instantiate(gemToSpawn, new Vector3(position.x, position.y, 0f), Quaternion.identity);
+            gem.transform.parent = this.transform;
+            gem.name = $"Gem - {position.x}, {position.y}";
+            allGems[position.x, position.y] = gem;
+
+            gem.SetupGem(position, this);
         }
     }
 }
