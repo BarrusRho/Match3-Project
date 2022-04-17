@@ -6,7 +6,7 @@ namespace Match3
 {
     public class Board : MonoBehaviour
     {
-        private Camera mainCamera;
+        private Camera _mainCamera;
         public int boardWidth;
         public int boardHeight;
         public GameObject backgroundTilePrefab;
@@ -15,7 +15,7 @@ namespace Match3
 
         private void Awake()
         {
-            mainCamera = Camera.main;
+            _mainCamera = Camera.main;
         }
 
         private void Start()
@@ -30,7 +30,7 @@ namespace Match3
             var xValue = (boardWidth / 2);
             var yValue = (boardHeight / 2);
             var zValue = -10;
-            mainCamera.transform.position = new Vector3(xValue, yValue, zValue);
+            _mainCamera.transform.position = new Vector3(xValue, yValue, zValue);
         }
 
         private void BoardSetup()
