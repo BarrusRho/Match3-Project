@@ -12,6 +12,7 @@ namespace Match3
         public GameObject backgroundTilePrefab;
         public Gem[] gems;
         public Gem[,] allGems;
+        public float gemSpeed;
 
         private void Awake()
         {

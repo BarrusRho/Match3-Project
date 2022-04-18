@@ -6,14 +6,14 @@ namespace Match3
 {
     public class Gem : MonoBehaviour
     {
-        public Board mainBoard;
-        public Vector2Int positionIndex;
-
         private Camera _mainCamera;
         private Vector2 _firstTouchPosition;
         private Vector2 _finalTouchPosition;
         private float _swipeAngle = 0f;
         private bool _isMousePressed;
+        private Gem _otherGem;
+        public Board mainBoard;
+        public Vector2Int positionIndex;
 
         private void Awake()
         {
@@ -22,6 +22,16 @@ namespace Match3
 
         private void Update()
         {
+            if (Vector2.Distance(transform.position, positionIndex) > .01f)
+            {
+                transform.position = Vector2.Lerp(transform.position, positionIndex, mainBoard.gemSpeed * Time.deltaTime);
+            }
+            else
+            {
+                transform.position = new Vector3(positionIndex.x, positionIndex.y, 0f);
+                mainBoard.allGems[positionIndex.x, positionIndex.y] = this;
+            }
+
             if (_isMousePressed == true && Input.GetMouseButtonUp(0))
             {
                 _isMousePressed = false;
@@ -40,7 +50,7 @@ namespace Match3
         {
             _firstTouchPosition = _mainCamera.ScreenToWorldPoint(new Vector3(Input.mousePosition.x, Input.mousePosition.y, _mainCamera.transform.position.z)) * -1;
             _isMousePressed = true;
-            Debug.Log($"Pressed - {name} at {_firstTouchPosition}");
+            Debug.Log($"Pressed = {name} at {_firstTouchPosition}");
         }
 
         private void CalculateAngle()
@@ -52,12 +62,38 @@ namespace Match3
             {
                 MoveGemPieces();
             }
-            Debug.Log($"SwipeAngle - {_swipeAngle}");
+            Debug.Log($"SwipeAngle = {_swipeAngle}");
         }
 
         private void MoveGemPieces()
         {
+            if (_swipeAngle < 45 && _swipeAngle > -45 && positionIndex.x < mainBoard.boardWidth - 1)
+            {
+                _otherGem = mainBoard.allGems[positionIndex.x + 1, positionIndex.y];
+                _otherGem.positionIndex.x--;
+                positionIndex.x++;
+            }
+            else if (_swipeAngle > 45 && _swipeAngle <= 135 && positionIndex.y < mainBoard.boardHeight - 1)
+            {
+                _otherGem = mainBoard.allGems[positionIndex.x, positionIndex.y + 1];
+                _otherGem.positionIndex.y--;
+                positionIndex.y++;
+            }
+            else if (_swipeAngle < -45 && _swipeAngle >= -135 && positionIndex.y > 0)
+            {
+                _otherGem = mainBoard.allGems[positionIndex.x, positionIndex.y - 1];
+                _otherGem.positionIndex.y++;
+                positionIndex.y--;
+            }
+            else if (_swipeAngle > 135 || _swipeAngle < -135 && positionIndex.x > 0)
+            {
+                _otherGem = mainBoard.allGems[positionIndex.x - 1, positionIndex.y];
+                _otherGem.positionIndex.x++;
+                positionIndex.x--;
+            }
 
+            mainBoard.allGems[positionIndex.x, positionIndex.y] = this;
+            mainBoard.allGems[_otherGem.positionIndex.x, _otherGem.positionIndex.y] = _otherGem;
         }
     }
 }

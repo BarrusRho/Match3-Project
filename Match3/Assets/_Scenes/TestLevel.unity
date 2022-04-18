@@ -238,7 +238,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   boardWidth: 7
   boardHeight: 7
-  mainCamera: {fileID: 484702127}
   backgroundTilePrefab: {fileID: 3965437045785640747, guid: 4940bc6465dc5d9498c4b145299ca65f, type: 3}
   gems:
   - {fileID: 6106550994436350982, guid: e9e87856e2399bc4fa4a97de8a72e81c, type: 3}
@@ -246,6 +245,7 @@ MonoBehaviour:
   - {fileID: 3611718772121535934, guid: 781837d4594819a4f8260a99bc585462, type: 3}
   - {fileID: 3432408246414395658, guid: a52e2c69649bab04da214459e75b1ef5, type: 3}
   - {fileID: 1770022201331657713, guid: ad090195ab005614297d8bd402da4311, type: 3}
+  gemSpeed: 7
 --- !u!4 &509039381
 Transform:
   m_ObjectHideFlags: 0
