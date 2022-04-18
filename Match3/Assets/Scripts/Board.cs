@@ -7,6 +7,7 @@ namespace Match3
     public class Board : MonoBehaviour
     {
         private Camera _mainCamera;
+        private MatchFinder _matchFinder;
         public int boardWidth;
         public int boardHeight;
         public GameObject backgroundTilePrefab;
@@ -17,6 +18,7 @@ namespace Match3
         private void Awake()
         {
             _mainCamera = Camera.main;
+            _matchFinder = FindObjectOfType<MatchFinder>();
         }
 
         private void Start()
@@ -24,6 +26,11 @@ namespace Match3
             allGems = new Gem[boardWidth, boardHeight];
             CameraSetup();
             BoardSetup();
+        }
+
+        private void Update()
+        {
+            _matchFinder.FindAllMatches();
         }
 
         private void CameraSetup()
@@ -43,7 +50,7 @@ namespace Match3
                     var position = new Vector2(x, y);
                     GameObject backgroundTile = Instantiate(backgroundTilePrefab, position, Quaternion.identity);
                     backgroundTile.transform.parent = this.transform;
-                    backgroundTile.name = $"BackgroundTile - {x}, {y}";
+                    backgroundTile.name = $"BackgroundTile = {x}, {y}";
 
                     var gemToUse = Random.Range(0, gems.Length);
                     SpawnGem(new Vector2Int(x, y), gems[gemToUse]);
@@ -55,7 +62,7 @@ namespace Match3
         {
             Gem gem = Instantiate(gemToSpawn, new Vector3(position.x, position.y, 0f), Quaternion.identity);
             gem.transform.parent = this.transform;
-            gem.name = $"Gem - {position.x}, {position.y}";
+            gem.name = $"Gem = {position.x}, {position.y}";
             allGems[position.x, position.y] = gem;
 
             gem.SetupGem(position, this);
