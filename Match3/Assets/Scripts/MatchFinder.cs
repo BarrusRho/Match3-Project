@@ -1,12 +1,14 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System.Linq;
 
 namespace Match3
 {
     public class MatchFinder : MonoBehaviour
     {
         private Board _board;
+        public List<Gem> currentMatches = new List<Gem>();
 
         private void Awake()
         {
@@ -15,6 +17,8 @@ namespace Match3
 
         public void FindAllMatches()
         {
+            currentMatches.Clear();
+
             for (int x = 0; x < _board.boardWidth; x++)
             {
                 for (int y = 0; y < _board.boardHeight; y++)
@@ -33,6 +37,9 @@ namespace Match3
                                     currentGem.isGemMatched = true;
                                     leftGem.isGemMatched = true;
                                     rightGem.isGemMatched = true;
+                                    currentMatches.Add(currentGem);
+                                    currentMatches.Add(leftGem);
+                                    currentMatches.Add(rightGem);
                                 }
                             }
                         }
@@ -48,10 +55,18 @@ namespace Match3
                                 currentGem.isGemMatched = true;
                                 belowGem.isGemMatched = true;
                                 aboveGem.isGemMatched = true;
+                                currentMatches.Add(currentGem);
+                                currentMatches.Add(belowGem);
+                                currentMatches.Add(aboveGem);
                             }
                         }
                     }
                 }
+            }
+
+            if (currentMatches.Count > 0)
+            {
+                currentMatches = currentMatches.Distinct().ToList();
             }
         }
     }
