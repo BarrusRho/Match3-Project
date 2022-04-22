@@ -7,7 +7,7 @@ namespace Match3
     public class Board : MonoBehaviour
     {
         private Camera _mainCamera;
-        private MatchFinder _matchFinder;
+        [HideInInspector] public MatchFinder matchFinder;
         public int boardWidth;
         public int boardHeight;
         public GameObject backgroundTilePrefab;
@@ -18,7 +18,7 @@ namespace Match3
         private void Awake()
         {
             _mainCamera = Camera.main;
-            _matchFinder = FindObjectOfType<MatchFinder>();
+            matchFinder = FindObjectOfType<MatchFinder>();
         }
 
         private void Start()
@@ -30,7 +30,7 @@ namespace Match3
 
         private void Update()
         {
-            _matchFinder.FindAllMatches();
+            matchFinder.FindAllMatches();
         }
 
         private void CameraSetup()

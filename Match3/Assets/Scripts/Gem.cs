@@ -18,6 +18,7 @@ namespace Match3
         public bool isGemMatched;
         [HideInInspector] public Board board;
         [HideInInspector] public Vector2Int positionIndex;
+        [HideInInspector] public Vector2Int previousPosition;
 
         private void Awake()
         {
@@ -71,6 +72,8 @@ namespace Match3
 
         private void MoveGemPieces()
         {
+            previousPosition = positionIndex;
+
             if (_swipeAngle < 45 && _swipeAngle > -45 && positionIndex.x < board.boardWidth - 1)
             {
                 _otherGem = board.allGems[positionIndex.x + 1, positionIndex.y];
@@ -98,6 +101,26 @@ namespace Match3
 
             board.allGems[positionIndex.x, positionIndex.y] = this;
             board.allGems[_otherGem.positionIndex.x, _otherGem.positionIndex.y] = _otherGem;
+
+            StartCoroutine(CheckMovementCoroutine());
+        }
+
+        public IEnumerator CheckMovementCoroutine()
+        {
+            yield return new WaitForSeconds(0.5f);
+            board.matchFinder.FindAllMatches();
+
+            if (_otherGem != null)
+            {
+                if (isGemMatched == false && _otherGem.isGemMatched == false)
+                {
+                    _otherGem.positionIndex = positionIndex;
+                    positionIndex = previousPosition;
+
+                    board.allGems[positionIndex.x, positionIndex.y] = this;
+                    board.allGems[_otherGem.positionIndex.x, _otherGem.positionIndex.y] = _otherGem;
+                }
+            }
         }
     }
 }
