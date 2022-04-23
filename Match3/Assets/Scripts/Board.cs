@@ -53,6 +53,13 @@ namespace Match3
                     backgroundTile.name = $"BackgroundTile = {x}, {y}";
 
                     var gemToUse = Random.Range(0, gems.Length);
+                    var iterations = 0;
+                    while (IsMatched(new Vector2Int(x, y), gems[gemToUse]) == true && iterations < 100)
+                    {
+                        gemToUse = Random.Range(0, gems.Length);
+                        iterations++;
+                    }
+                    
                     SpawnGem(new Vector2Int(x, y), gems[gemToUse]);
                 }
             }
@@ -66,6 +73,25 @@ namespace Match3
             allGems[position.x, position.y] = gem;
 
             gem.SetupGem(position, this);
+        }
+
+        private bool IsMatched(Vector2Int positionToCheck, Gem gemToCheck)
+        {
+            if (positionToCheck.x > 1)
+            {
+                if (allGems[positionToCheck.x - 1, positionToCheck.y].gemType == gemToCheck.gemType && allGems[positionToCheck.x - 2, positionToCheck.y].gemType == gemToCheck.gemType)
+                {
+                    return true;
+                }
+            }
+            if (positionToCheck.y > 1)
+            {
+                if (allGems[positionToCheck.x, positionToCheck.y - 1].gemType == gemToCheck.gemType && allGems[positionToCheck.x, positionToCheck.y - 2].gemType == gemToCheck.gemType)
+                {
+                    return true;
+                }
+            }
+            return false;
         }
     }
 }
