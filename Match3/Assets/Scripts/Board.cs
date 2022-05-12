@@ -93,5 +93,28 @@ namespace Match3
             }
             return false;
         }
+
+        private void DestroyMatchedGemAt(Vector2Int position)
+        {
+            if (allGems[position.x, position.y] != null)
+            {
+                if (allGems[position.x, position.y].isGemMatched == true)
+                {
+                    Destroy(allGems[position.x, position.y].gameObject);
+                    allGems[position.x, position.y] = null;
+                }
+            }
+        }
+
+        public void DestroyMatches()
+        {
+            for (int i = 0; i < matchFinder.currentMatches.Count; i++)
+            {
+                if (matchFinder.currentMatches[i] != null)
+                {
+                    DestroyMatchedGemAt(matchFinder.currentMatches[i].positionIndex);
+                }
+            }
+        }
     }
 }

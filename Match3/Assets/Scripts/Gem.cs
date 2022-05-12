@@ -120,6 +120,10 @@ namespace Match3
                     board.allGems[positionIndex.x, positionIndex.y] = this;
                     board.allGems[_otherGem.positionIndex.x, _otherGem.positionIndex.y] = _otherGem;
                 }
+                else
+                {
+                    board.DestroyMatches();
+                }
             }
         }
     }
